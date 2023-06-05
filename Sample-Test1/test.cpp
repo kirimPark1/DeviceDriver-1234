@@ -12,7 +12,7 @@ public:
 	MOCK_METHOD(void, write, (long address, unsigned char data), (override));
 };
 
-TEST(TestCaseName, TestReadSuccess) {
+TEST(TestCaseName, TestRead) {
 	//대역
 	FlashMemoryDeviceMock flashMemoryMock;
 
@@ -21,5 +21,20 @@ TEST(TestCaseName, TestReadSuccess) {
 
 	DeviceDriver testingDeviceDriver(&flashMemoryMock);
 	testingDeviceDriver.read(0xA);
+}
 
+TEST(TestCaseName, TestReadException) {
+	//대역
+	FlashMemoryDeviceMock flashMemoryMock;
+
+	//스터빙 4번은 잘 읽히는데 5번째 다른값이 읽힐때
+	EXPECT_CALL(flashMemoryMock, read(0x2))
+		.WillOnce(Return(0x7))
+		.WillOnce(Return(0x7))
+		.WillOnce(Return(0x7))
+		.WillOnce(Return(0x7))
+		.WillOnce(Return(0x3));
+
+	DeviceDriver testingDeviceDriver(&flashMemoryMock);
+	EXPECT_THROW(testingDeviceDriver.read(0x2), ReadFailException);
 }
