@@ -72,3 +72,10 @@ TEST_F(ApplicationTest, TestReadAndPrint)
 	EXPECT_CALL(flashMemoryMock, read(_)).Times(25);
 	testingApplicaion.ReadAndPrint(0x00, 0x04);
 }
+
+TEST_F(ApplicationTest, WriteAllTest)
+{
+	EXPECT_CALL(flashMemoryMock, read(_)).Times(5);
+	EXPECT_CALL(flashMemoryMock, write(_,_)).Times(5);
+	testingApplicaion.WriteAll(0x77);
+}
