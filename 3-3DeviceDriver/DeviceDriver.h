@@ -10,4 +10,6 @@ public:
 
 protected:
     FlashMemoryDevice* m_hardware;
+private:
+    int TotalReadTryCount = 5;
 };

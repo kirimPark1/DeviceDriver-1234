@@ -38,3 +38,18 @@ TEST(TestCaseName, TestReadException) {
 	DeviceDriver testingDeviceDriver(&flashMemoryMock);
 	EXPECT_THROW(testingDeviceDriver.read(0x2), ReadFailException);
 }
+
+TEST(TestCaseName, TestReadSuccess) {
+	//´ë¿ª
+	FlashMemoryDeviceMock flashMemoryMock;
+
+	EXPECT_CALL(flashMemoryMock, read(0x2))
+		.WillOnce(Return(0x7))
+		.WillOnce(Return(0x7))
+		.WillOnce(Return(0x7))
+		.WillOnce(Return(0x7))
+		.WillOnce(Return(0x7));
+
+	DeviceDriver testingDeviceDriver(&flashMemoryMock);
+	EXPECT_THAT(testingDeviceDriver.read(0x2), Eq(7));
+}
