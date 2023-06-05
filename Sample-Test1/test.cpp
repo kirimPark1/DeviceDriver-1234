@@ -45,3 +45,9 @@ TEST_F(DeviceDriverTest, TestReadSuccess) {
 
 	EXPECT_THAT(testingDeviceDriver.read(0x2), Eq(7));
 }
+
+TEST_F(DeviceDriverTest, TestWrite) {
+	//지워져 있는지 확인하기위한 read
+	EXPECT_CALL(flashMemoryMock, read(0x2)).Times(1);
+	testingDeviceDriver.write(0x2, 1234);
+}
