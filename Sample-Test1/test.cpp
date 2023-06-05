@@ -56,14 +56,14 @@ TEST_F(DeviceDriverTest, TestReadSuccess) {
 
 TEST_F(DeviceDriverTest, TestWrite) {
 	//지워져 있는지 확인하기위한 read
-	EXPECT_CALL(flashMemoryMock, read(0x2)).Times(1);
+	EXPECT_CALL(flashMemoryMock, read(0x2)).Times(1).WillRepeatedly(Return(ALREADY_WRITTEN));
 	testingDeviceDriver.write(0x2, 1234);
 }
 
 TEST_F(DeviceDriverTest, TestWriteException) {
 	//지워져 있는지 확인하기위한 read
 	EXPECT_CALL(flashMemoryMock, read(0x2))
-		.WillOnce(Return(ALREADY_WRITTEN));
+		.WillOnce(Return(0x75));
 	EXPECT_THROW(testingDeviceDriver.write(0x2, 1234), WriteFailException);
 }
 
@@ -75,7 +75,7 @@ TEST_F(ApplicationTest, TestReadAndPrint)
 
 TEST_F(ApplicationTest, WriteAllTest)
 {
-	EXPECT_CALL(flashMemoryMock, read(_)).Times(5);
-	EXPECT_CALL(flashMemoryMock, write(_,_)).Times(5);
+	EXPECT_CALL(flashMemoryMock, read(_)).Times(5).WillRepeatedly(Return(0xFF));
+	EXPECT_CALL(flashMemoryMock, write(_, _)).Times(5);
 	testingApplicaion.WriteAll(0x77);
 }
