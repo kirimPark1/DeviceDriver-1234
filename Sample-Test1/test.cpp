@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "../3-3DeviceDriver/DeviceDriver.cpp"
+#include "../3-3DeviceDriver/Application.cpp"
 
 using namespace std;
 using namespace testing;
@@ -16,6 +17,13 @@ class DeviceDriverTest : public testing::Test
 public:
 	FlashMemoryDeviceMock flashMemoryMock;
 	DeviceDriver testingDeviceDriver{ &flashMemoryMock };
+};
+class ApplicationTest : public testing::Test
+{
+public:
+	FlashMemoryDeviceMock flashMemoryMock;
+	DeviceDriver testingDeviceDriver{ &flashMemoryMock };
+	Application testingApplicaion{&testingDeviceDriver};
 };
 TEST_F(DeviceDriverTest, TestRead) {
 	//Ω∫≈Õ∫˘ or behavior ∞À¡ı
@@ -57,4 +65,10 @@ TEST_F(DeviceDriverTest, TestWriteException) {
 	EXPECT_CALL(flashMemoryMock, read(0x2))
 		.WillOnce(Return(ALREADY_WRITTEN));
 	EXPECT_THROW(testingDeviceDriver.write(0x2, 1234), WriteFailException);
+}
+
+TEST_F(ApplicationTest, TestReadAndPrint)
+{
+	EXPECT_CALL(flashMemoryMock, read(_)).Times(25);
+	testingApplicaion.ReadAndPrint(0x00, 0x04);
 }
